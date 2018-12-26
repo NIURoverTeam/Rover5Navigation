@@ -17,7 +17,7 @@
     <link name='base_link'>
         <visual>
             <geometry>
-               <mesh filename="file:///~/catkin_ws/src/rover_5_navigation/meshes/base_link.stl">
+               <mesh filename="file:///$(arg meshDirectory)/base_link.stl">
                 </mesh>
             </geometry>
             <material name="white"/>
@@ -27,7 +27,7 @@
         <visual>
             <origin xyz=".3542 0 0"/>
             <geometry>
-                <mesh filename="file:///~/catkin_ws/src/rover_5_navigation/meshes/wheel_scaled.stl">
+                <mesh filename="file:///$(arg meshDirectory)/wheel_scaled.stl">
                 </mesh>
             </geometry>
             <material name="white"/>
@@ -36,7 +36,7 @@
     <link name='wheel_2'>
         <visual>
             <geometry>
-                <mesh filename="file:///~/catkin_ws/src/rover_5_navigation/meshes/wheel_scaled.stl">
+                <mesh filename="file:///$(arg meshDirectory)/wheel_scaled.stl">
                 </mesh>
             </geometry>
             <material name="white"/>
@@ -46,7 +46,7 @@
     <link name='wheel_3'>
         <visual>
             <geometry>
-                <mesh filename="file:///~/catkin_ws/src/rover_5_navigation/meshes/wheel_scaled.stl">
+                <mesh filename="file:///$(arg meshDirectory)/wheel_scaled.stl">
                 </mesh>
             </geometry>
             <material name="white"/>
@@ -56,7 +56,7 @@
     <link name='wheel_4'>
         <visual>
             <geometry>
-                <mesh filename="file:///~/catkin_ws/src/rover_5_navigation/meshes/wheel_scaled.stl">
+                <mesh filename="file:///$(arg meshDirectory)/wheel_scaled.stl">
                 </mesh>
             </geometry>
             <origin xyz=".3542 0 0" rpy="3.14159 0 0"/>
@@ -66,7 +66,7 @@
     <link name='top_rack'>
         <visual>
             <geometry>
-                <mesh filename="file:///~/catkin_ws/src/rover_5_navigation/meshes/rack.stl">
+                <mesh filename="file:///$(arg meshDirectory)/rack.stl">
                 </mesh>
             </geometry>
             <material name="acrylic"/>
@@ -75,7 +75,7 @@
     <link name='intel_realsense'>
         <visual>
             <geometry>
-                <mesh filename="file:///~/catkin_ws/src/rover_5_navigation/meshes/Intel_RealSense_Depth_Camera_D435.STL" scale=".001 .001 .001">
+                <mesh filename="file:///$(arg meshDirectory)/Intel_RealSense_Depth_Camera_D435.STL" scale=".001 .001 .001">
                 </mesh>
             </geometry>
             <material name="gray"/>
