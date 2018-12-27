@@ -1,0 +1,7 @@
+<launch>
+    <!-- Drive Control Node -->
+    <node pkg="rover_5_navigation" type="driver.py" name="driver.py">
+    <!-- Launch sensors -->
+    <include file="$(find rover_5_navigation)/launch/usb_gps.launch"/>
+    <include file="$(find phidgets_imu)/launch/imu.launch"/>
+</launch>

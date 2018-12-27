@@ -47,6 +47,10 @@
   <depend>urdf</depend>
   <depend>rviz</depend>
   <depend>xacro</depend>
+  <depend>phidgets_imu</depend>
+  <depend>joy</depend>
+  <depend>robot_localization</depend>
+  <depend>nav_msgs</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

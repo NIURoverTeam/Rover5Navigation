@@ -1,0 +1,3 @@
+<launch>
+    <node name="nmea_serial_driver" pkg="nmea_navsat_driver" type="nmea_serial_driver"/>
+</launch>
