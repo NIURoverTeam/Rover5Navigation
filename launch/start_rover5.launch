@@ -1,7 +1,23 @@
 <launch>
     <!-- Drive Control Node -->
-    <node pkg="rover_5_navigation" type="driver.py" name="driver.py">
+    <!-- <node pkg="rover_5_navigation" type="base_controller.py" name="base_controller"> -->
     <!-- Launch sensors -->
     <include file="$(find rover_5_navigation)/launch/usb_gps.launch"/>
     <include file="$(find phidgets_imu)/launch/imu.launch"/>
+	<include file="$(find realsense2_camera)/launch/rs_rgbd.launch"/>
+    <!-- All the Nav Stack Configuration -->
+    <group ns="planner">
+      <remap from="/camera/depth_registered/points" to="/planner_cloud"/>
+      <remap from="map" to="/rtabmap/proj_map"/>
+      <remap from="move_base_simple/goal" to="/planner_goal"/>
+        
+      <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <rosparam file="$(find rover_5_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find rover_5_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find rover_5_navigation)/config/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find rover_5_navigation)/config/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find rover_5_navigation)/config/base_local_planner_params.yaml" command="load" />
+      </node>
+   </group>
+
 </launch>
