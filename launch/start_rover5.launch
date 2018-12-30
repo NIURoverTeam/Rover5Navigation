@@ -5,7 +5,9 @@
     <include file="$(find rover_5_navigation)/launch/usb_gps.launch"/>
     <include file="$(find phidgets_imu)/launch/imu.launch"/>
 	<include file="$(find realsense2_camera)/launch/rs_rgbd.launch"/>
-    <!-- All the Nav Stack Configuration -->
+    <!-- Odometry Setup -->
+    
+    <!-- Path Planning Configuration -->
     <group ns="planner">
       <remap from="/camera/depth_registered/points" to="/planner_cloud"/>
       <remap from="map" to="/rtabmap/proj_map"/>
