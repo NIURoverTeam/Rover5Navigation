@@ -42,17 +42,17 @@
       <param name="Rtabmap/TimeThr" type="string" value="700"/>
       <param name="Rtabmap/DetectionRate" type="string" value="1"/>
       
-      <param name="Kp/WordsPerImage" type="string" value="200"/>
+      <param name="Kp/MaxFeatures" type="string" value="200"/>
       <param name="Kp/RoiRatios" type="string" value="0.03 0.03 0.04 0.04"/>
 
       <param name="SURF/HessianThreshold" type="string" value="1000"/>
 
-      <param name="LccBow/MaxDepth" type="string" value="5"/>
-      <param name="LccBow/MinInliers" type="string" value="10"/>
+      <param name="Vis/MaxDepth" type="string" value="5"/>
+      <param name="Vis/MinInliers" type="string" value="10"/> <!-- Verify this value -->
       <param name="LccBow/InlierDistance" type="string" value="0.05"/>
 
-      <param name="LccReextract/Activated" type="string" value="true"/>
-      <param name="LccReextract/MaxWords" type="string" value="500"/>
+      <param name="RGBD/LoopClosureReextractFeatures" type="string" value="true"/>
+      <param name="Vis/MaxFeatures" type="string" value="500"/> <!-- Verify this value -->
     </node>
   </group>
   <!-- Path Planning Configuration -->
