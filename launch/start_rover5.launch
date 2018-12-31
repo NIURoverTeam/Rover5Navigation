@@ -1,12 +1,16 @@
 <launch>
-    <!-- Drive Control Node -->
-    <!-- <node pkg="rover_5_navigation" type="base_controller.py" name="base_controller"> -->
-    <!-- Launch sensors -->
-    <include file="$(find rover_5_navigation)/launch/usb_gps.launch"/>
-    <include file="$(find phidgets_imu)/launch/imu.launch"/>
-	  <include file="$(find realsense2_camera)/launch/rs_rgbd.launch"/>
-
-    <!-- Tf Setup -->
+  <arg name="rvizconfig" default="$(find rover_5_navigation)/rviz/urdf.rviz" />
+  <arg name="gui" default="false" />
+  <arg name="mapping" default="false"/>
+  <arg name="planning" default="false"/>
+  <!-- Drive Control Node -->
+  <!-- <node pkg="rover_5_navigation" type="base_controller.py" name="base_controller"> -->
+  <!-- Launch sensors -->
+  <include file="$(find rover_5_navigation)/launch/usb_gps.launch"/>
+  <include file="$(find phidgets_imu)/launch/imu.launch"/>
+  <include file="$(find realsense2_camera)/launch/rs_rgbd.launch"/>
+  <!-- Tf Setup -->
+  <group ns="tf">
     <param name="robot_description" command="$(find xacro)/xacro $(find rover_5_navigation)/urdf/rover_5.urdf meshDirectory:=$(find rover_5_navigation)/meshes/" />
     <node name="world_to_map" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /base_link /map 100"/>
     <node name="imu_to_phidgets" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /phidgets_imu /imu 100"/>
@@ -14,30 +18,59 @@
     <node name="camera_to_model" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /intel_realsense /camera_link 100"/>
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
-    <!-- Odometry Setup - Currently getting data from the Realsense's built-in IMU published on /odom, might need to use robot_localization to convert /imu from phidgets 
-    Can also theoretically add stereo odometry from rtabmap_ros for added precision. GPS can also be integrated, with some effort -->
+  </group>
+  <!-- Odometry Setup - Currently getting data from the Realsense's built-in IMU published on /odom, might need to use robot_localization to convert /imu from phidgets 
+  Can also theoretically add stereo odometry from rtabmap_ros for added precision. GPS can also be integrated, with some effort -->
 
-    <!-- Mapping Configuration -->
+  <!-- Mapping Configuration -->
+  <group ns="rtabmap" if="$(arg mapping)">   
+    <!-- Visual SLAM: args: "delete_db_on_start" and "udebug" -->
+    <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="--delete_db_on_start">
+      <param name="frame_id" type="string" value="base_footprint"/>
+      <param name="subscribe_stereo" type="bool" value="true"/>
+      <param name="subscribe_depth" type="bool" value="false"/>
 
-    <!-- Path Planning Configuration -->
-    <!-- <group ns="planner">
-      <remap from="/camera/depth_registered/points" to="/planner_cloud"/>
-      <remap from="map" to="/rtabmap/proj_map"/>
-      <remap from="move_base_simple/goal" to="/planner_goal"/>
-        
-      <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-        <rosparam file="$(find rover_5_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
-        <rosparam file="$(find rover_5_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
-        <rosparam file="$(find rover_5_navigation)/config/local_costmap_params.yaml" command="load" />
-        <rosparam file="$(find rover_5_navigation)/config/global_costmap_params.yaml" command="load" />
-        <rosparam file="$(find rover_5_navigation)/config/base_local_planner_params.yaml" command="load" />
-      </node>
-   </group> -->
+      <remap from="left/image_rect" to="/stereo_camera/left/image_rect_color"/>
+      <remap from="right/image_rect" to="/stereo_camera/right/image_rect"/>
+      <remap from="left/camera_info" to="/stereo_camera/left/camera_info_throttle"/>
+      <remap from="right/camera_info" to="/stereo_camera/right/camera_info_throttle"/>
 
+      <remap from="odom" to="/odometry"/>
+      <param name="queue_size" type="int" value="30"/>
+
+      <!-- RTAB-Map's parameters -->
+      <param name="Rtabmap/TimeThr" type="string" value="700"/>
+      <param name="Rtabmap/DetectionRate" type="string" value="1"/>
+      
+      <param name="Kp/WordsPerImage" type="string" value="200"/>
+      <param name="Kp/RoiRatios" type="string" value="0.03 0.03 0.04 0.04"/>
+
+      <param name="SURF/HessianThreshold" type="string" value="1000"/>
+
+      <param name="LccBow/MaxDepth" type="string" value="5"/>
+      <param name="LccBow/MinInliers" type="string" value="10"/>
+      <param name="LccBow/InlierDistance" type="string" value="0.05"/>
+
+      <param name="LccReextract/Activated" type="string" value="true"/>
+      <param name="LccReextract/MaxWords" type="string" value="500"/>
+    </node>
+  </group>
+  <!-- Path Planning Configuration -->
+  <group ns="planner" if="$(arg planning)">
+    <remap from="/camera/depth_registered/points" to="/planner_cloud"/>
+    <remap from="map" to="/rtabmap/proj_map"/>
+    <remap from="move_base_simple/goal" to="/planner_goal"/>
+      
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+      <rosparam file="$(find rover_5_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+      <rosparam file="$(find rover_5_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+      <rosparam file="$(find rover_5_navigation)/config/local_costmap_params.yaml" command="load" />
+      <rosparam file="$(find rover_5_navigation)/config/global_costmap_params.yaml" command="load" />
+      <rosparam file="$(find rover_5_navigation)/config/base_local_planner_params.yaml" command="load" />
+    </node>
+  </group> -->
   <!-- Gui? -->
-  <arg name="gui" default="false" />
-  <arg name="rvizconfig" default="$(find rover_5_navigation)/rviz/urdf.rviz" />
-  <group if="$(arg gui)">
+  <group ns="gui" if="$(arg gui)">
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)"/>
   </group>
 </launch>
