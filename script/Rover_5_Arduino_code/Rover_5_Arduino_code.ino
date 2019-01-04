@@ -22,11 +22,23 @@ void loop()
   if(Serial.available()) {
     uint32_t first = Serial.read();
     while(!Serial.available());
-    if (first == 'l' || first == 'r') {
-      uint32_t second = Serial.read();
-      while(!Serial.available());
-      uint32_t third = Serial.read();
-      movement(first, (int) second, (char) third);
+    uint32_t second = Serial.read();
+    
+    switch (first) {
+      case 'L':
+        forwardMove(left_pwr, left_dir, second);
+        break;
+      case 'R':
+        forwardMove(right_pwr, right_dir, second);
+        break;
+      case 'l':
+        reverseMove(left_pwr, left_dir, second);
+        break;
+      case 'r':
+        reverseMove(right_pwr, right_dir, second);
+        break;
+      default:
+        break;
     }
   }
   
@@ -36,9 +48,14 @@ void loop()
   }
 }
 
-void movement (char side, int pwm, char dir) {
-  analogWrite((side=='L'?left_pwr:right_pwr), pwm);
-  digitalWrite((side=='L'?left_dir:right_dir), (dir=='B'?REVERSE:FORWARD));
+void forwardMove(int motor_pin, int dir_pin, int pwm) {
+  analogWrite(motor_pin, pwm);
+  digitalWrite(dir_pin, FORWARD);
+}
+
+void reverseMove(int motor_pin, int dir_pin, int pwm) {
+  analogWrite(motor_pin, pwm);
+  digitalWrite(dir_pin, REVERSE);
 }
 
 void stopMovement () {
@@ -47,4 +64,3 @@ void stopMovement () {
   digitalWrite(right_pwr, 0);
   analogWrite(right_dir, FORWARD);
 }
-
