@@ -19,11 +19,22 @@ void setup() {
 
 void loop()
 {
-  if(Serial.available()) {
+  if (millis() - tick >= 1000) {
+    stopMovement();
+    tick = millis();
+  }
+
+  if (Serial.available()) {
     uint32_t first = Serial.read();
-    while(!Serial.available());
+    while (!Serial.available()) {
+      if (millis() - tick >= 1000) {
+        stopMovement();
+        tick = millis();
+        return;
+      }
+    }
     uint32_t second = Serial.read();
-    
+
     switch (first) {
       case 'L':
         forwardMove(left_pwr, left_dir, second);
@@ -38,12 +49,9 @@ void loop()
         reverseMove(right_pwr, right_dir, second);
         break;
       default:
+        stopMovement();
         break;
     }
-  }
-  
-  if (millis() - tick >= 1000) {
-    stopMovement();
     tick = millis();
   }
 }
@@ -51,11 +59,13 @@ void loop()
 void forwardMove(int motor_pin, int dir_pin, int pwm) {
   analogWrite(motor_pin, pwm);
   digitalWrite(dir_pin, FORWARD);
+  return;
 }
 
 void reverseMove(int motor_pin, int dir_pin, int pwm) {
   analogWrite(motor_pin, pwm);
   digitalWrite(dir_pin, REVERSE);
+  return;
 }
 
 void stopMovement () {
@@ -63,4 +73,5 @@ void stopMovement () {
   analogWrite(left_dir, FORWARD);
   digitalWrite(right_pwr, 0);
   analogWrite(right_dir, FORWARD);
+  return;
 }
