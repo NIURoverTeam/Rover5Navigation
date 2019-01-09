@@ -5,7 +5,7 @@ from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Joy
 import rospy
 import tf
-roslib.load_manifest('rover_core_os')
+roslib.load_manifest('rover_5_navigation')
 
 # Global variables go here
 autonomous = False
@@ -14,9 +14,9 @@ autonomous = False
 def create_twist(horizontal, vertical):
     twist = Twist()
     # Assign forward velocity based on up/down of thumbstick
-    twist.linear.x = vertical
+    twist.linear.x = vertical / 8
     # Rotate using tankdrive based on left/right of thumbstick
-    twist.angular.z = horizontal
+    twist.angular.z = horizontal / 66
     twister.publish(twist)
 
 # Triggers when a Joy message is published
@@ -52,7 +52,7 @@ def controller_input(data):
 
     if autonomous == False and (axes[1] != 0 or axes[1] != 0):
         create_twist(axes[0], axes[1])
-    if autonomous == False and buttons[7] == 1):
+    if autonomous == False and buttons[7] == 1:
         autonomous == True
 
 if __name__ == '__main__':
