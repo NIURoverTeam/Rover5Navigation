@@ -6,11 +6,14 @@
   <arg name="tf" default="false"/>
   <arg name="sensors" default="false"/>
   <arg name="jsX" default="0"/>
+  <arg name="local" default="false"/>
   <param name="joynode/dev" value="/dev/input/js$(arg jsX)"/>
   <!-- Drive Control Nodes -->
-  <node name="joystick_controller" pkg="joy" type="joy_node"/>
+  <group if="$(arg local)">
+    <node name="joystick_controller" pkg="joy" type="joy_node"/>
+    <node pkg="rover_5_navigation" type="driver.py" name="driver"/>
+  </group>
   <node pkg="rover_5_navigation" type="base_controller.py" name="base_controller"/>
-  <node pkg="rover_5_navigation" type="driver.py" name="driver"/>
   <!-- Launch sensors -->
   <group if="$(arg sensors)">
     <include file="$(find rover_5_navigation)/launch/usb_gps.launch"/>
