@@ -1,6 +1,87 @@
 <launch>
+  <arg name="rvizconfig" default="$(find rover_5_navigation)/rviz/urdf.rviz" />
+  <arg name="gui" default="false"/>
+  <arg name="mapping" default="false"/>
+  <arg name="planning" default="false"/>
+  <arg name="tf" default="true"/>
   <arg name="jsX" default="0"/>
   <param name="joynode/dev" value="/dev/input/js$(arg jsX)"/>
-  <node name="joystick_controller" pkg="joy" type="joy_node"/>
-  <node pkg="rover_5_navigation" type="driver.py" name="driver"/>
+  <!-- Drive Control Nodes -->
+  <group>
+    <node name="joystick_controller" pkg="joy" type="joy_node"/>
+    <node pkg="rover_5_navigation" type="driver.py" name="driver"/>
+  </group>
+  <!-- Tf Setup -->
+  <group if="$(arg tf)">
+    <param name="robot_description" command="$(find xacro)/xacro $(find rover_5_navigation)/urdf/rover_5.urdf meshDirectory:=$(find rover_5_navigation)/meshes/" />
+    <node name="world_to_map" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /base_link /map 100"/>
+    <node name="imu_to_phidgets" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /phidgets_imu /imu 100"/>
+    <node name="odom_to_base_link" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /base_link /odom 100"/>
+    <node name="camera_to_model" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /intel_realsense /camera_link 100"/>
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+  </group>
+  <!-- Odometry Setup -->
+  <group>
+    <!-- Tomorrow: use robot_localization and robot_pose_ekf to get odometry-->
+    <param name="imu0" value="/imu/data"/>
+    <rosparam param="imu0_config">[false, false, false,
+                                   false, false, true,
+                                   false, false, false,
+                                   false, false, true,
+                                   true, false, false]</rosparam>
+    <rosparam param="two_d_mode">true</rosparam>
+    <node name="ukf_localization_node" pkg="robot_localization" type="ukf_localization_node"/>
+  </group>
+  <!-- Mapping Configuration -->
+  <group ns="rtabmap" if="$(arg mapping)">   
+    <!-- Visual SLAM: args: "delete_db_on_start" and "udebug" -->
+    <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="--delete_db_on_start">
+      <param name="frame_id" type="string" value="base_footprint"/>
+      <param name="subscribe_stereo" type="bool" value="true"/>
+      <param name="subscribe_depth" type="bool" value="false"/>
+
+      <remap to="/camera/infra1/image_rect_raw" from="/rtabmap/left/image_rect"/>
+      <remap to="/camera/infra2/image_rect_raw" from="/rtabmap/right/image_rect"/>
+      <remap to="/camera/infra1/camera_info" from="/rtabmap/left/camera_info"/>
+      <remap to="/camera/infra1/camera_info" from="/rtabmap/right/camera_info"/>
+
+      <!-- <remap from="odom" to="/odometry"/> -->
+      <param name="queue_size" type="int" value="30"/>
+
+      <!-- RTAB-Map's parameters -->
+      <param name="Rtabmap/TimeThr" type="string" value="700"/>
+      <param name="Rtabmap/DetectionRate" type="string" value="1"/>
+      
+      <param name="Kp/MaxFeatures" type="string" value="200"/>
+      <param name="Kp/RoiRatios" type="string" value="0.03 0.03 0.04 0.04"/>
+
+      <param name="SURF/HessianThreshold" type="string" value="1000"/>
+
+      <param name="Vis/MaxDepth" type="string" value="5"/>
+      <param name="Vis/MinInliers" type="string" value="10"/> <!-- Verify this value -->
+      <param name="Vis/InlierDistance" type="string" value="0.05"/> <!-- Verify this value -->
+
+      <param name="RGBD/LoopClosureReextractFeatures" type="string" value="true"/>
+      <param name="Vis/MaxFeatures" type="string" value="500"/> <!-- Verify this value -->
+    </node>
+  </group>
+  <!-- Path Planning Configuration -->
+  <group ns="planner" if="$(arg planning)">
+    <remap from="/camera/depth_registered/points" to="/planner_cloud"/>
+    <remap from="map" to="/rtabmap/proj_map"/>
+    <remap from="move_base_simple/goal" to="/planner_goal"/>
+      
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+      <rosparam file="$(find rover_5_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+      <rosparam file="$(find rover_5_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+      <rosparam file="$(find rover_5_navigation)/config/local_costmap_params.yaml" command="load" />
+      <rosparam file="$(find rover_5_navigation)/config/global_costmap_params.yaml" command="load" />
+      <rosparam file="$(find rover_5_navigation)/config/base_local_planner_params.yaml" command="load" />
+    </node>
+  </group> -->
+  <!-- Gui? -->
+  <group ns="gui" if="$(arg gui)">
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)"/>
+  </group>
 </launch>

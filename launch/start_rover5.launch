@@ -4,7 +4,7 @@
   <arg name="mapping" default="false"/>
   <arg name="planning" default="false"/>
   <arg name="tf" default="false"/>
-  <arg name="sensors" default="false"/>
+  <arg name="sensors" default="true"/>
   <arg name="jsX" default="0"/>
   <arg name="local" default="false"/>
   <param name="joynode/dev" value="/dev/input/js$(arg jsX)"/>
