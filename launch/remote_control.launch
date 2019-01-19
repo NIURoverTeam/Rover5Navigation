@@ -1,7 +1,7 @@
 <launch>
   <arg name="rvizconfig" default="$(find rover_5_navigation)/rviz/urdf.rviz" />
-  <arg name="gui" default="false"/>
-  <arg name="mapping" default="false"/>
+  <arg name="gui" default="true"/>
+  <arg name="mapping" default="true"/>
   <arg name="planning" default="false"/>
   <arg name="tf" default="true"/>
   <arg name="jsX" default="0"/>
@@ -23,15 +23,9 @@
   </group>
   <!-- Odometry Setup -->
   <group>
-    <!-- Tomorrow: use robot_localization and robot_pose_ekf to get odometry-->
-    <param name="imu0" value="/imu/data"/>
-    <rosparam param="imu0_config">[false, false, false,
-                                   false, false, true,
-                                   false, false, false,
-                                   false, false, true,
-                                   true, false, false]</rosparam>
-    <rosparam param="two_d_mode">true</rosparam>
-    <node name="ukf_localization_node" pkg="robot_localization" type="ukf_localization_node"/>
+    <node pkg="robot_localization" type="ukf_localization_node" name="ukf_se" clear_params="true">
+      <rosparam command="load" file="$(find rover_5_navigation)/config/ukf_localization.yaml" />
+    </node>
   </group>
   <!-- Mapping Configuration -->
   <group ns="rtabmap" if="$(arg mapping)">   
@@ -46,7 +40,7 @@
       <remap to="/camera/infra1/camera_info" from="/rtabmap/left/camera_info"/>
       <remap to="/camera/infra1/camera_info" from="/rtabmap/right/camera_info"/>
 
-      <!-- <remap from="odom" to="/odometry"/> -->
+      <remap to="/odometry/filtered" from="/rtabmap/odom"/>
       <param name="queue_size" type="int" value="30"/>
 
       <!-- RTAB-Map's parameters -->
@@ -64,6 +58,7 @@
 
       <param name="RGBD/LoopClosureReextractFeatures" type="string" value="true"/>
       <param name="Vis/MaxFeatures" type="string" value="500"/> <!-- Verify this value -->
+      <param name="approx_sync" value="true"/>
     </node>
   </group>
   <!-- Path Planning Configuration -->
