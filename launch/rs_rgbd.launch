@@ -203,7 +203,7 @@ Processing enabled by this node:
         <remap from = "image" to="depth_registered/image"/>
       </node>
     </group>
-    <node pkg="realsense_ros_camera" type="grayscaler.py" name="grayscaler"/>
+    <node pkg="rover_5_navigation" type="grayscaler.py" name="grayscaler"/>
 
 
   </group>
