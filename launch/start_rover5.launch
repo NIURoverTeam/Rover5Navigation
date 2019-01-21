@@ -18,7 +18,7 @@
   <group if="$(arg sensors)">
     <include file="$(find rover_5_navigation)/launch/usb_gps.launch"/>
     <include file="$(find phidgets_imu)/launch/imu.launch"/>
-    <include file="$(find realsense2_camera)/launch/rs_rgbd.launch"/>
+    <include file="$(find rover_5_navigation)/launch/rs_rgbd.launch"/>
   </group>
   <!-- Tf Setup -->
   <group if="$(arg tf)">

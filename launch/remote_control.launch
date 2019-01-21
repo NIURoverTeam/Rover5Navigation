@@ -29,8 +29,9 @@
   </group>
   <!-- Mapping Configuration -->
   <group ns="rtabmap" if="$(arg mapping)">   
+    <include file="$(find rover_5_navigation)/launch/rtabmap.launch"/>
     <!-- Visual SLAM: args: "delete_db_on_start" and "udebug" -->
-    <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="--delete_db_on_start">
+    <!-- <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="--delete_db_on_start">
       <param name="frame_id" type="string" value="base_footprint"/>
       <param name="subscribe_stereo" type="bool" value="true"/>
       <param name="subscribe_depth" type="bool" value="false"/>
@@ -59,7 +60,7 @@
       <param name="RGBD/LoopClosureReextractFeatures" type="string" value="true"/>
       <param name="Vis/MaxFeatures" type="string" value="500"/> <!-- Verify this value -->
       <param name="approx_sync" value="true"/>
-    </node>
+    </node> -->
   </group>
   <!-- Path Planning Configuration -->
   <group ns="planner" if="$(arg planning)">
