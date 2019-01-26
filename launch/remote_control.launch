@@ -30,37 +30,6 @@
   <!-- Mapping Configuration -->
   <group ns="rtabmap" if="$(arg mapping)">   
     <include file="$(find rover_5_navigation)/launch/rtabmap.launch"/>
-    <!-- Visual SLAM: args: "delete_db_on_start" and "udebug" -->
-    <!-- <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="--delete_db_on_start">
-      <param name="frame_id" type="string" value="base_footprint"/>
-      <param name="subscribe_stereo" type="bool" value="true"/>
-      <param name="subscribe_depth" type="bool" value="false"/>
-
-      <remap to="/camera/infra1/image_rect_raw" from="/rtabmap/left/image_rect"/>
-      <remap to="/camera/infra2/image_rect_raw" from="/rtabmap/right/image_rect"/>
-      <remap to="/camera/infra1/camera_info" from="/rtabmap/left/camera_info"/>
-      <remap to="/camera/infra1/camera_info" from="/rtabmap/right/camera_info"/>
-
-      <remap to="/odometry/filtered" from="/rtabmap/odom"/>
-      <param name="queue_size" type="int" value="30"/>
-
-      <!-- RTAB-Map's parameters -->
-      <param name="Rtabmap/TimeThr" type="string" value="700"/>
-      <param name="Rtabmap/DetectionRate" type="string" value="1"/>
-      
-      <param name="Kp/MaxFeatures" type="string" value="200"/>
-      <param name="Kp/RoiRatios" type="string" value="0.03 0.03 0.04 0.04"/>
-
-      <param name="SURF/HessianThreshold" type="string" value="1000"/>
-
-      <param name="Vis/MaxDepth" type="string" value="5"/>
-      <param name="Vis/MinInliers" type="string" value="10"/> <!-- Verify this value -->
-      <param name="Vis/InlierDistance" type="string" value="0.05"/> <!-- Verify this value -->
-
-      <param name="RGBD/LoopClosureReextractFeatures" type="string" value="true"/>
-      <param name="Vis/MaxFeatures" type="string" value="500"/> <!-- Verify this value -->
-      <param name="approx_sync" value="true"/>
-    </node> -->
   </group>
   <!-- Path Planning Configuration -->
   <group ns="planner" if="$(arg planning)">
@@ -75,7 +44,7 @@
       <rosparam file="$(find rover_5_navigation)/config/global_costmap_params.yaml" command="load" />
       <rosparam file="$(find rover_5_navigation)/config/base_local_planner_params.yaml" command="load" />
     </node>
-  </group> -->
+  </group>
   <!-- Gui? -->
   <group ns="gui" if="$(arg gui)">
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)"/>
