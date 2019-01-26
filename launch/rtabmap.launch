@@ -33,7 +33,7 @@
   <arg name="gui_cfg"                 default="~/.ros/rtabmap_gui.ini" />
   <arg name="rviz_cfg"                default="$(find rtabmap_ros)/launch/config/rgbd.rviz" />
 
-  <arg name="frame_id"                default="camera_link"/>     <!-- Fixed frame id, you may set "base_link" or "base_footprint" if they are published -->
+  <arg name="frame_id"                default="base_link"/>     <!-- Fixed frame id, you may set "base_link" or "base_footprint" if they are published -->
   <arg name="odom_frame_id"           default=""/>                <!-- If set, TF is used to get odometry instead of the topic -->
   <arg name="map_frame_id"            default="map"/>
   <arg name="ground_truth_frame_id"   default=""/>     <!-- e.g., "world" -->
@@ -122,6 +122,7 @@
     <remap from="camera_info" to="/camera/depth/camera_info"/>
     <remap from="scan" to="/realsense_scan"/>
     <param name="range_max" type="double" value="4"/>
+    <param name="output_frame_id" type="str" value="_depth_optical_frame"/>
   </node>
 
   <group ns="$(arg namespace)">
