@@ -51,6 +51,8 @@
   <depend>joy</depend>
   <depend>robot_localization</depend>
   <depend>nav_msgs</depend>
+  <depend>depthimage_to_laserscan</depend>
+  <depend>rgbd_launch</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

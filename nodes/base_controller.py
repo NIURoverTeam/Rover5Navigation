@@ -9,7 +9,7 @@ from time import sleep
 import tf
 roslib.load_manifest('rover_5_navigation')
 
-ser = serial.Serial('/dev/ttyACM0', 9600) 
+ser = serial.Serial('/dev/ttyACM1', 9600) 
 
 # Function called when Twist messages are published
 def navigation(data):
