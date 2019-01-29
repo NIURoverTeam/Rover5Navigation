@@ -23,7 +23,7 @@
   <!-- Tf Setup -->
   <group if="$(arg tf)">
     <param name="robot_description" command="$(find xacro)/xacro $(find rover_5_navigation)/urdf/rover_5.urdf meshDirectory:=$(find rover_5_navigation)/meshes/" />
-    <!-- <node name="world_to_map" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /base_link /map 100"/> -->
+    <node name="world_to_map" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /base_link /map 100"/>
     <node name="imu_to_phidgets" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /phidgets_imu /imu 100"/>
     <node name="odom_to_base_link" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /base_link /odom 100"/>
     <node name="camera_to_model" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /intel_realsense /camera_link 100"/>
@@ -36,36 +36,6 @@
   </group>
   <!-- Mapping Configuration -->
   <group ns="rtabmap" if="$(arg mapping)">   
-    <!-- Visual SLAM: args: "delete_db_on_start" and "udebug" -->
-    <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="--delete_db_on_start">
-      <param name="frame_id" type="string" value="base_footprint"/>
-      <param name="subscribe_stereo" type="bool" value="true"/>
-      <param name="subscribe_depth" type="bool" value="false"/>
-
-      <remap to="/camera/infra1/image_rect_raw" from="/rtabmap/left/image_rect"/>
-      <remap to="/camera/infra2/image_rect_raw" from="/rtabmap/right/image_rect"/>
-      <remap to="/camera/infra1/camera_info" from="/rtabmap/left/camera_info"/>
-      <remap to="/camera/infra1/camera_info" from="/rtabmap/right/camera_info"/>
-
-      <!-- <remap from="odom" to="/odometry"/> -->
-      <param name="queue_size" type="int" value="30"/>
-
-      <!-- RTAB-Map's parameters -->
-      <param name="Rtabmap/TimeThr" type="string" value="700"/>
-      <param name="Rtabmap/DetectionRate" type="string" value="1"/>
-      
-      <param name="Kp/MaxFeatures" type="string" value="200"/>
-      <param name="Kp/RoiRatios" type="string" value="0.03 0.03 0.04 0.04"/>
-
-      <param name="SURF/HessianThreshold" type="string" value="1000"/>
-
-      <param name="Vis/MaxDepth" type="string" value="5"/>
-      <param name="Vis/MinInliers" type="string" value="10"/> <!-- Verify this value -->
-      <param name="Vis/InlierDistance" type="string" value="0.05"/> <!-- Verify this value -->
-
-      <param name="RGBD/LoopClosureReextractFeatures" type="string" value="true"/>
-      <param name="Vis/MaxFeatures" type="string" value="500"/> <!-- Verify this value -->
-    </node>
   </group>
   <!-- Path Planning Configuration -->
   <group ns="planner" if="$(arg planning)">

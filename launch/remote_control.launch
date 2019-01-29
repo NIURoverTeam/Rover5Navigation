@@ -14,10 +14,8 @@
   <!-- Tf Setup -->
   <group if="$(arg tf)">
     <param name="robot_description" command="$(find xacro)/xacro $(find rover_5_navigation)/urdf/rover_5.urdf meshDirectory:=$(find rover_5_navigation)/meshes/" />
-    <node name="world_to_map" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /base_link /map 100"/>
-    <node name="imu_to_phidgets" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /phidgets_imu /imu 100"/>
-    <node name="odom_to_base_link" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /base_link /odom 100"/>
-    <node name="camera_to_model" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /intel_realsense /camera_link 100"/>
+    <node name="imu_to_phidgets" pkg="tf" type="static_transform_publisher" args="1 0 0 0 0 0 1 /phidgets_imu /imu 10"/>
+    <node name="camera_to_model" pkg="tf" type="static_transform_publisher" args="0 0 0 1.570795 0 -1.570795 /intel_realsense /_link 10"/>
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
   </group>
