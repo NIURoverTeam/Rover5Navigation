@@ -81,7 +81,7 @@
             <material name="gray"/>
         </visual>
     </link>
-    <link name='phidgets_imu'>
+    <link name='imu'>
         <visual>
             <geometry>
                 <box size=".038 .014 .038"/>
@@ -132,9 +132,9 @@
         <child link="intel_realsense"/>
         <origin xyz="0.04 -0.005 0.075" rpy="1.570795 0 -1.570795"/>
     </joint>
-    <joint name="base_to_phidgets" type="fixed">
+    <joint name="base_to_imu" type="fixed">
         <parent link="base_link"/>
-        <child link="phidgets_imu"/>
+        <child link="imu"/>
         <origin xyz="-.265 .1 .04"/>
     </joint>
     <joint name="rack_to_gps" type="fixed">
