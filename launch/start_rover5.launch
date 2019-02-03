@@ -5,11 +5,11 @@
   <arg name="planning" default="false"/>
   <arg name="tf" default="false"/>
   <arg name="sensors" default="true"/>
-  <arg name="jsX" default="0"/>
   <arg name="local" default="false"/>
-  <param name="joynode/dev" value="/dev/input/js$(arg jsX)"/>
   <!-- Drive Control Nodes -->
   <group if="$(arg local)">
+    <arg name="jsX" default="0"/>
+    <param name="joystick_controller/dev" value="/dev/input/js$(arg jsX)"/>
     <node name="joystick_controller" pkg="joy" type="joy_node"/>
     <node pkg="rover_5_navigation" type="driver.py" name="driver"/>
   </group>
@@ -17,7 +17,7 @@
   <!-- Launch sensors -->
   <group if="$(arg sensors)">
     <include file="$(find rover_5_navigation)/launch/usb_gps.launch"/>
-    <include file="$(find phidgets_imu)/launch/imu.launch"/>
+    <include file="$(find rover_5_navigation)/launch/imu.launch"/>
     <include file="$(find rover_5_navigation)/launch/rs_rgbd.launch"/>
   </group>
   <!-- Tf Setup -->

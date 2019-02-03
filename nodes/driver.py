@@ -63,7 +63,7 @@ if __name__ == '__main__':
     rospy.Subscriber("joy", Joy, controller_input)
 
     # Start the driver node
-    rospy.init_node('base_controller')
+    rospy.init_node('driver')
 
     # Start node logging
     log_string = 'Starting driver....%s' % rospy.get_time()
