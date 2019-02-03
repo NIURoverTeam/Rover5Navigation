@@ -84,7 +84,8 @@
     <link name='imu_link'>
         <visual>
             <geometry>
-                <box size=".038 .014 .038"/>
+                <!-- <box size=".038 .014 .038"/> -->
+                <box size=".038 .038 .014"/>
             </geometry>
             <material name="black"/>
         </visual>
@@ -135,7 +136,7 @@
     <joint name="base_to_imu_link" type="fixed">
         <parent link="base_link"/>
         <child link="imu_link"/>
-        <origin xyz="-.265 .1 .04"/>
+        <origin xyz="-.265 .1 .04" rpy="0 0 0"/>
     </joint>
     <joint name="rack_to_gps" type="fixed">
         <parent link="top_rack"/>
