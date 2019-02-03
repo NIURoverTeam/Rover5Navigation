@@ -1,9 +1,9 @@
 <launch>
   <arg name="rvizconfig" default="$(find rover_5_navigation)/rviz/urdf.rviz" />
-  <arg name="gui" default="false"/>
-  <arg name="mapping" default="false"/>
-  <arg name="planning" default="false"/>
-  <arg name="tf" default="false"/>
+  <arg name="gui" default="true"/>
+  <arg name="mapping" default="true"/>
+  <arg name="planning" default="true"/>
+  <arg name="tf" default="true"/>
   <arg name="jsX" default="0"/>
   <param name="joystick_controller/dev" value="/dev/input/js$(arg jsX)"/>
   <!-- Drive Control Nodes -->
@@ -15,8 +15,9 @@
   <group if="$(arg tf)">
     <param name="robot_description" command="$(find xacro)/xacro $(find rover_5_navigation)/urdf/rover_5.urdf meshDirectory:=$(find rover_5_navigation)/meshes/" />
     <!-- <node name="odom_to_base" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 /odom /base_link 1"/> -->
-    <node name="camera_to_model" pkg="tf" type="static_transform_publisher" args="0 0 0 1.570795 0 -1.570795 /intel_realsense /_link 10"/>
-    <!-- <node name="rgbd_odom_to_odom" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 /odom_rgbd /odom 10"/> -->
+    <!-- <node name="camera_to_model" pkg="tf" type="static_transform_publisher" args="0 0 0 1.570795 0 -1.570795 /intel_realsense /_link 10"/> -->
+    <node name="camera_to_model" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 /intel_realsense /_link 10"/>
+    <!-- <node name="rgbd_odom_to_odom" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 /odom_rgbd /odom 1"/> -->
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
   </group>
