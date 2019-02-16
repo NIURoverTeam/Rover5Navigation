@@ -18,8 +18,8 @@
   <arg name="stereo"          default="false"/>
 
   <!-- Choose visualization -->
-  <arg name="rtabmapviz"              default="true" />
-  <arg name="rviz"                    default="false" />
+  <arg name="rtabmapviz"              default="false" />
+  <arg name="rviz"                    default="true" />
 
   <!-- Localization-only mode -->
   <arg name="localization"            default="false"/>
@@ -320,7 +320,7 @@
     <remap from="right/image"       to="$(arg right_image_topic_relay)"/>
     <remap from="left/camera_info"  to="$(arg left_camera_info_topic)"/>
     <remap from="right/camera_info" to="$(arg right_camera_info_topic)"/>
-    <remap from="rgb/image"         to="$(arg rgb_topic_relay)"/>
+    <remap from="rgb/image"         to="/camera/color/image_rect_color"/>
     <remap from="depth/image"       to="$(arg depth_topic_relay)"/>
     <remap from="rgb/camera_info"   to="$(arg camera_info_topic)"/>
     <remap from="cloud"             to="voxel_cloud" />
