@@ -10,8 +10,7 @@
     <include file="$(find rover_5_navigation)/launch/rs_rgbd.launch"/>
   </group>
   <group if="$(arg realsense)">
-    <node pkg="realsense2_camera" type="rs_camera.launch">
-      <param name="align_depth" value="true"/>
-    </node>
+    <include file="$(find realsense2_camera)/launch/rs_camera.launch" />
+    <param name="align_depth" value="true"/>
   </group>
 </launch>
