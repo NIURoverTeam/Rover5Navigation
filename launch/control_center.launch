@@ -1,0 +1,15 @@
+
+<launch>
+  <arg name="drive" default="true"/>
+  <arg name="jsX" default="0"/>
+  <arg name="mapping" default="true"/>
+  <param name="joystick_controller/dev" value="/dev/input/js$(arg jsX)"/>
+  <!-- Drive Control Nodes -->
+  <group if="$(arg drive)">
+    <node name="joystick_controller" pkg="joy" type="joy_node"/>
+    <node pkg="rover_5_navigation" type="driver.py" name="driver"/>
+  </group>
+  <group if="$(arg mapping)">
+    <include file="$(find rover_5_navigation)/launch/mapping.launch"/>
+  </group>
+</launch>
