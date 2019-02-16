@@ -1,17 +1,32 @@
 <launch>
   <arg name="sensors" default="false"/>
-  <arg name="realsense" default="true"/>
+  <arg name="camera" default="true"/>
+  <arg name="rate" default="5"/>
   <!-- Drive Control Nodes -->
   <node pkg="rover_5_navigation" type="base_controller.py" name="base_controller"/>
   <!-- Launch sensors -->
   <group if="$(arg sensors)">
     <include file="$(find rover_5_navigation)/launch/usb_gps.launch"/>
     <include file="$(find rover_5_navigation)/launch/imu.launch"/>
-    <include file="$(find rover_5_navigation)/launch/rs_rgbd.launch"/>
+    <!-- <include file="$(find rover_5_navigation)/launch/rs_rgbd.launch"/> -->
   </group>
-  <group if="$(arg realsense)">
+  <!--RealSense-->
+  <group if="$(arg camera)">
     <include file="$(find realsense2_camera)/launch/rs_camera.launch">
       <arg name="align_depth" value="true"/>
     </include>
+    <node pkg="nodelet" type="nodelet" name="data_throttle" args="load rtabmap_ros/data_throttle camera_nodelet_manager" output="screen">
+      <param name="rate" type="double" value="$(arg rate)"/>
+      <param name="decimation" type="int" value="$(arg decimation)"/>
+      <param name="approx_sync" type="bool" value="$(arg approx_sync)"/>
+
+      <remap from="rgb/image_in"       to="/camera/color/image_raw"/>
+      <remap from="depth/image_in"     to="/camera/aligned_depth_to_color/image_raw"/>
+      <remap from="rgb/camera_info_in" to="/camera/color/camera_info"/>
+
+      <remap from="rgb/image_out"       to="data_throttled_image"/>
+      <remap from="depth/image_out"     to="data_throttled_image_depth"/>
+      <remap from="rgb/camera_info_out" to="data_throttled_camera_info"/>
+    </node>
   </group>
 </launch>
