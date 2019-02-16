@@ -1,18 +1,7 @@
 <launch>
-  <arg name="rvizconfig" default="$(find rover_5_navigation)/rviz/urdf.rviz" />
-  <arg name="gui" default="false" />
-  <arg name="mapping" default="false"/>
-  <arg name="planning" default="false"/>
-  <arg name="tf" default="false"/>
-  <arg name="sensors" default="true"/>
-  <arg name="local" default="false"/>
+  <arg name="sensors" default="false"/>
+  <arg name="realsense" default="true"/>
   <!-- Drive Control Nodes -->
-  <group if="$(arg local)">
-    <arg name="jsX" default="0"/>
-    <param name="joystick_controller/dev" value="/dev/input/js$(arg jsX)"/>
-    <node name="joystick_controller" pkg="joy" type="joy_node"/>
-    <node pkg="rover_5_navigation" type="driver.py" name="driver"/>
-  </group>
   <node pkg="rover_5_navigation" type="base_controller.py" name="base_controller"/>
   <!-- Launch sensors -->
   <group if="$(arg sensors)">
@@ -20,39 +9,9 @@
     <include file="$(find rover_5_navigation)/launch/imu.launch"/>
     <include file="$(find rover_5_navigation)/launch/rs_rgbd.launch"/>
   </group>
-  <!-- Tf Setup -->
-  <group if="$(arg tf)">
-    <param name="robot_description" command="$(find xacro)/xacro $(find rover_5_navigation)/urdf/rover_5.urdf meshDirectory:=$(find rover_5_navigation)/meshes/" />
-    <node name="world_to_map" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /base_link /map 100"/>
-    <node name="imu_to_phidgets" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /phidgets_imu /imu 100"/>
-    <node name="odom_to_base_link" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /base_link /odom 100"/>
-    <node name="camera_to_model" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 /intel_realsense /camera_link 100"/>
-    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
-  </group>
-  <!-- Odometry Setup -->
-  <group>
-    <!-- Tomorrow: use robot_localization and robot_pose_ekf to get odometry-->
-  </group>
-  <!-- Mapping Configuration -->
-  <group ns="rtabmap" if="$(arg mapping)">   
-  </group>
-  <!-- Path Planning Configuration -->
-  <group ns="planner" if="$(arg planning)">
-    <remap from="/camera/depth_registered/points" to="/planner_cloud"/>
-    <remap from="map" to="/rtabmap/proj_map"/>
-    <remap from="move_base_simple/goal" to="/planner_goal"/>
-      
-    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-      <rosparam file="$(find rover_5_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
-      <rosparam file="$(find rover_5_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
-      <rosparam file="$(find rover_5_navigation)/config/local_costmap_params.yaml" command="load" />
-      <rosparam file="$(find rover_5_navigation)/config/global_costmap_params.yaml" command="load" />
-      <rosparam file="$(find rover_5_navigation)/config/base_local_planner_params.yaml" command="load" />
+  <group if="$arg realsense">
+    <node pkg="realsense2_camera" type="rs_camera.launch">
+      <param name="align_depth" value="true"/>
     </node>
-  </group> -->
-  <!-- Gui? -->
-  <group ns="gui" if="$(arg gui)">
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)"/>
   </group>
 </launch>
