@@ -7,6 +7,7 @@
     <arg name="rgb_topic" value="/camera/color/image_raw"/>
     <arg name="depth_topic" value="/camera/aligned_depth_to_color/image_raw"/>
     <arg name="camera_info_topic" value="/camera/color/camera_info"/>
+    <arg name="queue_size" value="50"/>
     <!-- <arg name="compressed" value="true"/> -->
   </include>
 </launch>
