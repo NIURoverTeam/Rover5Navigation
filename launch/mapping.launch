@@ -10,7 +10,7 @@
     <arg name="queue_size" value="100"/>
     <arg name="approx_sync" value="false"/>
     <arg name="compressed" value="true"/>
-    <arg name="rviz" value="true"/>
-    <arg name="rtabmapviz" value="false"/>
+    <arg name="rviz" value="false"/>
+    <arg name="rtabmapviz" value="true"/>
   </include>
 </launch>
