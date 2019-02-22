@@ -53,6 +53,8 @@
   <depend>nav_msgs</depend>
   <depend>depthimage_to_laserscan</depend>
   <depend>rgbd_launch</depend>
+  <depend>rtabmap_ros</depend>
+  <depend>rtabmap</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
