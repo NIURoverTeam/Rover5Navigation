@@ -2,7 +2,7 @@
 <launch>
   <arg name="drive" default="true"/>
   <arg name="jsX" default="0"/>
-  <arg name="mapping" default="true"/>
+  <arg name="mapping" default="false"/>
   <param name="joystick_controller/dev" value="/dev/input/js$(arg jsX)"/>
   <!-- Drive Control Nodes -->
   <group if="$(arg drive)">
@@ -12,4 +12,5 @@
   <group if="$(arg mapping)">
     <include file="$(find rover_5_navigation)/launch/mapping.launch"/>
   </group>
+  <node pkg="rtabmap_ros" type="rtabmapviz" name="rtabmapviz" args="-d $(find rtabmap_ros)/launch/config/rgbd_gui.ini" output="screen">
 </launch>
