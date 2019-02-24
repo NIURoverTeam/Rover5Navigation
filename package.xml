@@ -55,6 +55,7 @@
   <depend>rgbd_launch</depend>
   <depend>rtabmap_ros</depend>
   <depend>rtabmap</depend>
+  <depend>move_base</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

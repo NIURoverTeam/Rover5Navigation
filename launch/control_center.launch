@@ -2,6 +2,7 @@
   <arg name="drive" default="true"/>
   <arg name="jsX" default="0"/>
   <arg name="mapping" default="false"/>
+  <arg name="planning" default="true"/>
   <param name="joystick_controller/dev" value="/dev/input/js$(arg jsX)"/>
   <!-- Drive Control Nodes -->
   <group if="$(arg drive)">
