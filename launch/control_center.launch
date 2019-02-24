@@ -3,11 +3,19 @@
   <arg name="jsX" default="0"/>
   <arg name="mapping" default="false"/>
   <arg name="planning" default="true"/>
+  <arg name="tf" default="true"/>
   <param name="joystick_controller/dev" value="/dev/input/js$(arg jsX)"/>
   <!-- Drive Control Nodes -->
   <group if="$(arg drive)">
     <node name="joystick_controller" pkg="joy" type="joy_node"/>
     <node pkg="rover_5_navigation" type="driver.py" name="driver"/>
+  </group>
+  <!-- Tf Setup -->
+  <group if="$(arg tf)">
+    <param name="robot_description" command="$(find xacro)/xacro $(find rover_5_navigation)/urdf/rover_5.urdf meshDirectory:=$(find rover_5_navigation)/meshes/" />
+    <node name="camera_to_model" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 /intel_realsense /camera_link 10"/>
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
   </group>
   <!-- Mapping -->
   <group if="$(arg mapping)">
