@@ -35,7 +35,7 @@
   <!-- Planning -->
   <group ns="planner" if="$(arg planning)">
     <remap from="/camera/depth_registered/points" to="/planner_cloud"/>
-    <remap from="map" to="/rtabmap/proj_map"/>
+    <remap from="map" to="/rtabmap/grid_map"/>
     <remap from="move_base_simple/goal" to="/planner_goal"/>
       
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
